@@ -1,4 +1,3 @@
-use std::cmp::Ordering;
 use std::time::SystemTime;
 
 //Order
@@ -26,13 +25,13 @@ pub enum EventType {
 
 #[derive(Clone, Debug)]
 pub struct Order {
-    pub id_: String,
-    pub symbol_: String,
-    pub qty_: i32,
-    pub price_: f32,
-    pub entry_time_: SystemTime,
-    pub side_: OrderSide,
-    pub type_: OrderType,
+    id_: String,
+    symbol_: String,
+    qty_: i32,
+    price_: f32,
+    entry_time_: SystemTime,
+    side_: OrderSide,
+    type_: OrderType,
 }
 
 impl PartialOrd for Order {
