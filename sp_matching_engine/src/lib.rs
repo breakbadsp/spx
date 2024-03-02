@@ -12,7 +12,7 @@ pub struct MatchingResult {
 }
 
 impl MatchingResult {
-    fn default() -> Self {
+    fn new() -> Self {
         MatchingResult {
             matched_order_ids_: Vec::new(),
             executed_qty_: 0,
@@ -107,7 +107,7 @@ impl Level {
     }
 
     fn remove_order(&mut self, p_remove_order: &Order) -> bool {
-        return self.orders_.remove(p_remove_order);
+        self.orders_.remove(p_remove_order)
     }
 
     fn match_order(&mut self, p_order: &mut Order) -> Result<Option<MatchingResult>, String> {
@@ -122,7 +122,7 @@ impl Level {
         let mut avg_matched_price = 0.0;
 
         println!("Executing {remaining_qty}");
-        let mut result = MatchingResult::default();
+        let mut result = MatchingResult::new();
         while remaining_qty > 0 && !self.orders_.is_empty() {
             let first_order_if_any = self.orders_.first();
             match first_order_if_any {
@@ -183,12 +183,12 @@ impl OrderBook {
         match p_order.side_ {
             OrderSide::Buy => {
                 self.bids_.insert(Level::from_first_order(p_order));
-                return Ok(None);
+                Ok(None)
             }
 
             OrderSide::Sell => {
                 self.asks_.insert(Level::from_first_order(p_order));
-                return Ok(None);
+                Ok(None)
             }
         }
     }
@@ -197,18 +197,18 @@ impl OrderBook {
         match p_input_order.side_ {
             OrderSide::Buy => match p_input_order.type_ {
                 OrderType::Mkt => {
-                    return self.asks_.first();
+                    self.asks_.first()
                 }
                 OrderType::Limit => {
-                    return self.asks_.get(&Level::from_order(p_input_order));
+                    self.asks_.get(&Level::from_order(p_input_order))
                 }
             },
             OrderSide::Sell => match p_input_order.type_ {
                 OrderType::Mkt => {
-                    return self.bids_.first();
+                    self.bids_.first()
                 }
                 OrderType::Limit => {
-                    return self.bids_.get(&Level::from_order(p_input_order));
+                    self.bids_.get(&Level::from_order(p_input_order))
                 }
             },
         }
@@ -236,14 +236,14 @@ impl OrderBook {
                 }
             }
         }
-        return None;
+        None
     }
 
     fn match_order(&mut self, p_order: &mut Order) -> Result<Option<MatchingResult>, String> {
         let found_level = self.get_level_match(p_order);
         match found_level {
             None => {
-                return Ok(None);
+                Ok(None)
             }
             Some(matched_level) => {
                 println!("Matched to {:?}", matched_level);
@@ -271,7 +271,7 @@ impl OrderBook {
                     }
                 }
                 println!("After match {:?}", self);
-                return Ok(match_result);
+                Ok(match_result)
             }
         }
     }
@@ -369,9 +369,9 @@ impl MatchingEngine {
                 if let Some(new_order_book) = self.add_order_book(&p_order.symbol_) {
                     return new_order_book.add_first_order(p_order);
                 }
-                return Err(String::from(
+                Err(String::from(
                     "Failed to add first order in a order book of symbol {p_order.symbol_}",
-                ));
+                ))
             }
 
             Some(order_book) => {
@@ -380,7 +380,7 @@ impl MatchingEngine {
                     None => {
                         order_book.add_order(p_order);
                         println!("After add {:?}", self);
-                        return Ok(None);
+                        Ok(None)
                     }
                     Some(match_result) => {
                         p_order.qty_ -= match_result.executed_qty_;
@@ -391,7 +391,7 @@ impl MatchingEngine {
                             "Match result: {:?}, order qty: {} ",
                             match_result, p_order.qty_
                         );
-                        return Ok(Some(match_result));
+                        Ok(Some(match_result))
                     }
                 }
             }
@@ -405,9 +405,9 @@ impl MatchingEngine {
         let order_book_or_error = self.get_book_by_symbol(&p_order.symbol_);
         match order_book_or_error {
             None => {
-                return Err(String::from(
+                Err(String::from(
                     "Failed find the order book of symbol {p_order.symbol_}, replace on order failed",
-                ));
+                ))
             }
 
             Some(order_book) => {
@@ -423,7 +423,7 @@ impl MatchingEngine {
                     None => {
                         order_book.add_order(p_order);
                         println!("After add {:?}", self);
-                        return Ok(None);
+                        Ok(None)
                     }
                     Some(match_result) => {
                         p_order.qty_ -= match_result.executed_qty_;
@@ -434,7 +434,7 @@ impl MatchingEngine {
                             "Match result: {:?}, order qty: {} ",
                             match_result, p_order.qty_
                         );
-                        return Ok(Some(match_result));
+                        Ok(Some(match_result))
                     }
                 }
             }
@@ -448,9 +448,9 @@ impl MatchingEngine {
         let order_book_or_error = self.get_book_by_symbol(&p_order.symbol_);
         match order_book_or_error {
             None => {
-                return Err(String::from(
+                Err(String::from(
            "Failed find the order book of symbol {p_order.symbol_}, replace on order failed",
-          ));
+          ))
             }
 
             Some(order_book) => {
@@ -461,7 +461,7 @@ impl MatchingEngine {
                     ));
                 }
                 //TODO:: retrigger matching of top BIDS and ASKS if top is cancelled
-                return Ok(None);
+                Ok(None)
             }
         }
     }
@@ -474,7 +474,7 @@ impl MatchingEngine {
         if let Some(mutable_order) = self.order_book_by_symbol_.get_mut(p_symbol) {
             return Some(mutable_order);
         }
-        return None;
+        None
     }
 
     fn add_order_book(&mut self, p_symbol: &String) -> Option<&mut OrderBook> {
@@ -485,7 +485,7 @@ impl MatchingEngine {
 
         self.order_book_by_symbol_
             .insert(p_symbol.to_owned(), new_order_book);
-        return self.order_book_by_symbol_.get_mut(p_symbol);
+        self.order_book_by_symbol_.get_mut(p_symbol)
     }
 }
 
@@ -497,17 +497,17 @@ pub fn process_event(
     match p_event_type {
         EventType::New => {
             println!("\nNew Order, received:\n\t {:?}", p_order);
-            return p_order_book_collection.process_new_order(p_order);
+            p_order_book_collection.process_new_order(p_order)
         }
 
         EventType::Rpl => {
             println!("\nReplace Order, received:\n\t {:?}", p_order);
-            return p_order_book_collection.process_rpl_order(p_order);
+            p_order_book_collection.process_rpl_order(p_order)
         }
 
         EventType::Cxl => {
             println!("\nCancel Order, received:\n\t {:?}", p_order);
-            return p_order_book_collection.process_cxl_order(p_order);
+            p_order_book_collection.process_cxl_order(p_order)
         }
     }
 }
