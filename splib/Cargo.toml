@@ -1,6 +1,5 @@
-workspace = { members = [ "msg","sp_matching_engine", "splib"] }
 [package]
-name = "spx"
+name = "splib"
 version = "0.1.0"
 edition = "2021"
 
