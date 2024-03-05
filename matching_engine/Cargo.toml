@@ -1,5 +1,5 @@
 [package]
-name = "sp_matching_engine"
+name = "matching_engine"
 version = "0.1.0"
 edition = "2021"
 
