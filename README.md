@@ -38,4 +38,5 @@ Future features planned to be added:
   - FIX engine to Support for FIX protocol so that any Broker can connect and send orders via fix
   - Low latency Market data distribution service
   - 
-  - 
+
+![spx](https://github.com/breakbadsp/spx/assets/102610716/125a86ed-f646-4309-acec-f1d6b4e074f4)
