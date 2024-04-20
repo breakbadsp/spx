@@ -1,4 +1,6 @@
 mod mpmc_queue;
+mod mpmc;
+mod mpsc;
 
 #[cfg(test)]
 mod tests {
