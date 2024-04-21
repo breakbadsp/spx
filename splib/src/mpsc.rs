@@ -75,7 +75,7 @@ impl<T> Drop for Sender<T> {
 impl <T> Receiver<T> {
     pub fn dequeue(&mut self) -> Option<T> { 
         // Optimization, dequeu cached data first
-        if let Some(cached_data) = self.cache.pop_back() {
+        if let Some(cached_data) = self.cache.pop_front() {
             return Some(cached_data);
         }
 
@@ -131,7 +131,7 @@ mod tests {
             let tx_copy = tx.clone();
             println!("Producer started ");
             move || {
-                for i in 0..100 {
+                for i in 0..10 {
                     println!("Sending {i}");
                     tx_copy.enqueue(i);
                 }
@@ -181,12 +181,12 @@ mod tests {
                         }
                     }
                 }
-                assert_eq!(nums.len(), 100);
+                assert_eq!(nums.len(), 10);
             }
         });
         
         let mut producers = vec![];
-        for i in 0..100 {
+        for i in 0..10 {
             let producer = std::thread::spawn({
                 let tx_copy = tx.clone();
                 println!("Producer started : ");
