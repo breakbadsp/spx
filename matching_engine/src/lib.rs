@@ -2,7 +2,7 @@ use std::cmp::Ordering;
 use std::collections::BTreeSet;
 use std::collections::HashMap;
 
-use msg::*;
+use msg::order::*;
 
 #[derive(Debug, Clone)]
 pub struct MatchingResult {
