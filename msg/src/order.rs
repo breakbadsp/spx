@@ -56,3 +56,22 @@ impl Ord for Order {
 }
 
 impl Eq for Order {}
+
+impl Order {
+    pub fn from_bytes() -> Result<Order, &'static str> {
+        
+    }
+
+    pub fn new() -> Order {
+        let order = Order {
+            id_: String::from(""),
+            price_: 100.0,
+            symbol_: String::from(""),
+            qty_: 200,
+            side_: OrderSide::Buy,
+            type_: OrderType::Limit,
+            entry_time_: std::time::SystemTime::now(),
+        };
+        order
+    }
+}
